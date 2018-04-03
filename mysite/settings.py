@@ -25,7 +25,7 @@ SECRET_KEY = '_c-5kt=r15(h(*+&ia52jex7reorym$-u&60+p9w6y)9hj#1=-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com']
+ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com', 'localhost']
 
 
 # Application definition
@@ -120,3 +120,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# When login page accessed directly, it will redirect a successful login to the top-level index
+LOGIN_REDIRECT_URL = '/'

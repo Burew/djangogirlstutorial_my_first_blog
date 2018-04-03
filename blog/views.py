@@ -1,4 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login as _login,authenticate
+from django.contrib.auth.forms import AuthenticationForm
 from django.utils import timezone
 
 from .models import Post
@@ -16,6 +19,7 @@ def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     return render(request, 'blog/post_detail.html', {"post":post})
 
+@login_required
 def post_new(request):
     if request.method == "POST":
         #submitting form data
@@ -30,6 +34,7 @@ def post_new(request):
         form = PostForm()
         return render(request, 'blog/post_edit.html', {'form': form})
 
+@login_required
 def post_edit(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
@@ -43,19 +48,39 @@ def post_edit(request, pk):
         form = PostForm(instance=post)
     return render(request, 'blog/post_edit.html', {'form':form})
 
+@login_required
 def post_draft_list(request):
+    print("post draft list")
     posts = Post.objects.filter(published_date__isnull=True).order_by('created_date')
     return render(request, 'blog/post_draft_list.html', {'posts': posts})
 
+@login_required
 def post_publish(request, pk):
+    print("Post_publish ", pk)
     post = get_object_or_404(Post, pk=pk)    
     post.publish() #published method defined in Post model in models.py
     return redirect('post_detail', pk)
 
+@login_required
 def post_remove(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.delete() #each model has a delete method (by default)
     return redirect('post_list')
 
+def login(request):
+    if request.method == "POST":
+       form = AuthenticationForm(request.POST) 
+       if (form.is_valid()):
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            _login(request, user)
+            return redirect("")
+    else:
+        # return render(request, 'registration/login.html')
+        form = AuthenticationForm() 
+    return render(request, 'registration/login.html', {'form': form})
 
-    
+def logout(request):
+    logout(request)
+    return redirect('post_list')
