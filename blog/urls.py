@@ -8,6 +8,8 @@ postUrlPatterns = [
     url(r'^(?P<pk>\d+)/edit/$', views.post_edit, name='post_edit'), 
     url(r'^(?P<pk>\d+)/publish/$', views.post_publish, name='post_publish'),
     url(r'^(?P<pk>\d+)/remove/$', views.post_remove, name='post_remove'),
+    url(r'^(?P<pk>\d+)/comment/$', views.add_comment_to_post, name='add_comment_to_post'),
+    
 ]
 
 urlpatterns = [
@@ -16,5 +18,7 @@ urlpatterns = [
     url(r'^post/', include(postUrlPatterns)),   #for this line, done include the $ at the end of the regex
     url(r'^accounts/login/$', auth_views.login, name='login'),
     url(r'^accounts/logout/$', auth_views.logout, name='logout', kwargs={'next_page': '/'}),
+    url(r'^comment/(?P<pk>\d+)/approve/$', views.comment_approve, name='comment_approve'),
+    url(r'^comment/(?P<pk>\d+)/remove/$', views.comment_remove, name='comment_remove'),
 ]
 
